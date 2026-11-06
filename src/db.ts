@@ -8,21 +8,46 @@ export interface StorageOptions {
 }
 
 let dbInstance: DatabaseSync | null = null;
+let isSqliteSupported: boolean | null = null;
 
-export function getDatabase(dbPath?: string): DatabaseSync {
+function checkSqliteSupport(): boolean {
+  if (isSqliteSupported !== null) return isSqliteSupported;
+  try {
+    // Cloudflare Workers (unenv) does not support synchronous filesystem or native DatabaseSync
+    if (typeof fs === 'undefined' || typeof fs.mkdirSync !== 'function' || typeof DatabaseSync !== 'function') {
+      isSqliteSupported = false;
+      return false;
+    }
+    isSqliteSupported = true;
+    return true;
+  } catch {
+    isSqliteSupported = false;
+    return false;
+  }
+}
+
+export function getDatabase(dbPath?: string): DatabaseSync | null {
+  if (!checkSqliteSupport()) {
+    return null;
+  }
   if (dbInstance) {
     return dbInstance;
   }
-  const resolvedPath = dbPath || process.env.SQLITE_DB_PATH || path.join(process.cwd(), 'data', 'phd_storage.db');
-  const dir = path.dirname(resolvedPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  try {
+    const resolvedPath = dbPath || process.env.SQLITE_DB_PATH || path.join(process.cwd(), 'data', 'phd_storage.db');
+    const dir = path.dirname(resolvedPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
 
-  const db = new DatabaseSync(resolvedPath);
-  initDatabase(db);
-  dbInstance = db;
-  return db;
+    const db = new DatabaseSync(resolvedPath);
+    initDatabase(db);
+    dbInstance = db;
+    return db;
+  } catch {
+    isSqliteSupported = false;
+    return null;
+  }
 }
 
 export function closeDatabase(): void {
@@ -82,6 +107,7 @@ export function initDatabase(db: DatabaseSync): void {
 
 export function savePositions(positions: PhDPosition[], db?: DatabaseSync): void {
   const targetDb = db || getDatabase();
+  if (!targetDb) return;
   const now = new Date().toISOString();
 
   const insertStmt = targetDb.prepare(`
@@ -159,6 +185,7 @@ export function savePositions(positions: PhDPosition[], db?: DatabaseSync): void
 
 export function saveEvaluation(id: string, evaluation: Partial<PhDPosition>, db?: DatabaseSync): void {
   const targetDb = db || getDatabase();
+  if (!targetDb) return;
   const now = new Date().toISOString();
 
   const insertStmt = targetDb.prepare(`
@@ -195,6 +222,7 @@ export function saveEvaluation(id: string, evaluation: Partial<PhDPosition>, db?
 
 export function getEvaluationFromDb(id: string, db?: DatabaseSync): Partial<PhDPosition> | null {
   const targetDb = db || getDatabase();
+  if (!targetDb) return null;
   const selectStmt = targetDb.prepare('SELECT * FROM evaluations WHERE id = ?');
   const row = selectStmt.get(id) as Record<string, unknown> | undefined;
   if (!row) {
@@ -214,6 +242,7 @@ export function getEvaluationFromDb(id: string, db?: DatabaseSync): Partial<PhDP
 
 export function getAllStoredPositions(db?: DatabaseSync): PhDPosition[] {
   const targetDb = db || getDatabase();
+  if (!targetDb) return [];
   const rows = targetDb.prepare('SELECT * FROM positions ORDER BY match_score DESC').all() as Record<string, unknown>[];
   return rows.map((row) => ({
     id: String(row.id),
