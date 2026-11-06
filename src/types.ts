@@ -68,3 +68,15 @@ export interface UniversityFilterOptions {
   pathway?: string;
   field?: string;
 }
+
+export interface EnglishJobEntry {
+  jobId: string;
+  isMatch?: boolean;
+  jobTitle: string;
+  employer: string;
+  workplaceLocation: string;
+  category: string;
+  fitAssessment: string;
+  directApplicationLink: string;
+}
+

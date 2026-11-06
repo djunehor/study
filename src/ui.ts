@@ -1,11 +1,17 @@
-import { PhDPosition, UniversityEntry } from './types';
+import { PhDPosition, UniversityEntry, EnglishJobEntry } from './types';
+import { JOBS_GOTTINGEN_DATA } from './jobs-gottingen-data';
 
 /**
  * Render the mobile-responsive dashboard HTML using ASD-STE100 Simplified Technical English.
  */
-export function renderDashboardHtml(positions: PhDPosition[], universities: UniversityEntry[]): string {
+export function renderDashboardHtml(
+  positions: PhDPosition[],
+  universities: UniversityEntry[],
+  englishJobs: EnglishJobEntry[] = JOBS_GOTTINGEN_DATA
+): string {
   const jsonPositions = JSON.stringify(positions);
   const jsonUniversities = JSON.stringify(universities);
+  const jsonEnglishJobs = JSON.stringify(englishJobs);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -548,14 +554,98 @@ export function renderDashboardHtml(positions: PhDPosition[], universities: Univ
       </div>
       
       <div class="tabs">
-        <button class="tab-btn active" data-tab="jobsTab" onclick="switchTab('jobsTab')">Verified Ready-to-Apply PhD List</button>
+        <button class="tab-btn active" data-tab="gottingenTab" onclick="switchTab('gottingenTab')">Göttingen & Remote English Jobs (${englishJobs.length})</button>
+        <button class="tab-btn" data-tab="jobsTab" onclick="switchTab('jobsTab')">Verified Ready-to-Apply PhD List</button>
         <button class="tab-btn" data-tab="unisTab" onclick="switchTab('unisTab')">44 Western Universities & Professors</button>
         <button class="tab-btn" data-tab="portalsTab" onclick="switchTab('portalsTab')">Manual Search & Portals</button>
       </div>
     </header>
 
+    <!-- TAB: GÖTTINGEN & REMOTE ENGLISH JOBS (${englishJobs.length}) -->
+    <div id="gottingenTab" class="tab-content active">
+      <div class="summary-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiGottingenTotal">0</div>
+          <div class="kpi-label">Verified English Jobs</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiGottingenLocal" style="color: #166534;">0</div>
+          <div class="kpi-label">Göttingen Onsite / Hybrid</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiGottingenRemote" style="color: #2563eb;">0</div>
+          <div class="kpi-label">100% Remote (Germany)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiGottingenEnglish">100%</div>
+          <div class="kpi-label">Zero German Required</div>
+        </div>
+      </div>
+
+      <div class="actions-bar">
+        <div class="actions-left">
+          <a href="/api/export-gottingen-jobs" class="btn btn-primary" id="exportGottingenBtn" download="gottingen_remote_english_jobs.csv">
+            Download English Jobs (CSV)
+          </a>
+        </div>
+        <div class="actions-right">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Verified Candidate Profile: BSc International Relations, MSc Industrial Relations & HRM, Customer Care</span>
+        </div>
+      </div>
+
+      <div class="filters-card">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="gottingenSearchInput">Search Job Title, Employer, or Keyword</label>
+            <input type="text" id="gottingenSearchInput" placeholder="e.g. Customer, Excelitas, Sartorius, Human Resources" oninput="applyGottingenFilters()">
+          </div>
+          <div class="filter-group">
+            <label for="gottingenLocationSelect">Workplace Location</label>
+            <select id="gottingenLocationSelect" onchange="applyGottingenFilters()">
+              <option value="ALL">All Workplaces (Göttingen + 100% Remote)</option>
+              <option value="GÖTTINGEN">Göttingen Onsite / Hybrid Only</option>
+              <option value="REMOTE">100% Remote Germany Only</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="gottingenCategorySelect">Job Category</label>
+            <select id="gottingenCategorySelect" onchange="applyGottingenFilters()">
+              <option value="ALL">All Categories</option>
+              <option value="Customer Care">Customer Care / Support</option>
+              <option value="Human Resources">Human Resources & Recruiting</option>
+              <option value="Operations">Operations & Coordination</option>
+              <option value="Administration">Administration & Clerk</option>
+              <option value="Client Relations">Client Relations & Account Management</option>
+              <option value="Support & Training">Support & Training</option>
+              <option value="Communications">Communications & Social Media</option>
+              <option value="Academic / Research">Academic / Research</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats" id="gottingenStatsBar">Showing 0 positions</div>
+
+      <div class="jobs-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%;">#</th>
+              <th style="width: 27%;">Job Title & Employer</th>
+              <th style="width: 17%;">Workplace Location</th>
+              <th style="width: 14%;">Category</th>
+              <th style="width: 25%;">Gemini Fit Assessment</th>
+              <th style="width: 12%;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="gottingenTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- TAB 1: VERIFIED READY-TO-APPLY PHD LIST -->
-    <div id="jobsTab" class="tab-content active">
+    <div id="jobsTab" class="tab-content">
       <div class="summary-kpi-grid">
         <div class="kpi-card">
           <div class="kpi-value" id="kpiReadyCount">0</div>
@@ -780,6 +870,7 @@ export function renderDashboardHtml(positions: PhDPosition[], universities: Univ
   <script>
     const allPositions = ${jsonPositions};
     const allUniversities = ${jsonUniversities};
+    const allEnglishJobs = ${jsonEnglishJobs};
 
     function formatStateEnglish(state) {
       const map = {
@@ -794,6 +885,82 @@ export function renderDashboardHtml(positions: PhDPosition[], universities: Univ
         'Mecklenburg-Vorpommern': 'Mecklenburg-Western Pomerania',
       };
       return map[state] || state;
+    }
+
+    function initGottingenKpis() {
+      const total = allEnglishJobs.length;
+      const local = allEnglishJobs.filter(j => j.workplaceLocation.toLowerCase().includes('göttingen') || j.workplaceLocation.toLowerCase().includes('goettingen')).length;
+      const remote = total - local;
+
+      const elTotal = document.getElementById('kpiGottingenTotal');
+      const elLocal = document.getElementById('kpiGottingenLocal');
+      const elRemote = document.getElementById('kpiGottingenRemote');
+
+      if (elTotal) elTotal.textContent = String(total);
+      if (elLocal) elLocal.textContent = String(local);
+      if (elRemote) elRemote.textContent = String(remote);
+    }
+
+    function applyGottingenFilters() {
+      const search = (document.getElementById('gottingenSearchInput')?.value || '').toLowerCase().trim();
+      const locFilter = document.getElementById('gottingenLocationSelect')?.value || 'ALL';
+      const catFilter = document.getElementById('gottingenCategorySelect')?.value || 'ALL';
+
+      const filtered = allEnglishJobs.filter(j => {
+        const isGoe = j.workplaceLocation.toLowerCase().includes('göttingen') || j.workplaceLocation.toLowerCase().includes('goettingen');
+        if (locFilter === 'GÖTTINGEN' && !isGoe) return false;
+        if (locFilter === 'REMOTE' && isGoe) return false;
+
+        if (catFilter !== 'ALL' && j.category !== catFilter) return false;
+
+        if (search) {
+          const matchText = (j.jobTitle + ' ' + j.employer + ' ' + j.workplaceLocation + ' ' + j.category + ' ' + j.fitAssessment).toLowerCase();
+          if (!matchText.includes(search)) return false;
+        }
+
+        return true;
+      });
+
+      renderGottingenTable(filtered);
+    }
+
+    function renderGottingenTable(jobs) {
+      const tbody = document.getElementById('gottingenTableBody');
+      const stats = document.getElementById('gottingenStatsBar');
+      if (!tbody || !stats) return;
+
+      stats.textContent = 'Showing ' + jobs.length + ' verified positions (Total pool: ' + allEnglishJobs.length + ')';
+
+      if (jobs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 32px; color: #64748b;">No matching jobs found. Try adjusting your search query or filters above.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = jobs.map((j, idx) => {
+        const isGoe = j.workplaceLocation.toLowerCase().includes('göttingen') || j.workplaceLocation.toLowerCase().includes('goettingen');
+        const locBadge = isGoe
+          ? '<span class="badge badge-west">Göttingen</span>'
+          : '<span class="badge badge-pathway">100% Remote Germany</span>';
+
+        return '<tr>' +
+          '<td data-label="#"><strong>' + (idx + 1) + '</strong></td>' +
+          '<td data-label="Job Title">' +
+            '<a href="' + j.directApplicationLink + '" target="_blank" rel="noopener" class="job-title">' + j.jobTitle + '</a>' +
+            '<div class="job-meta" style="font-weight: 600; color: #1e3a8a;">' + j.employer + '</div>' +
+          '</td>' +
+          '<td data-label="Location">' +
+            locBadge +
+            '<div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">' + j.workplaceLocation + '</div>' +
+          '</td>' +
+          '<td data-label="Category"><span class="badge badge-tag">' + j.category + '</span></td>' +
+          '<td data-label="Fit Assessment">' +
+            '<div class="ai-detail-line" style="font-size: 0.85rem; line-height: 1.4;">' + j.fitAssessment + '</div>' +
+          '</td>' +
+          '<td data-label="Action">' +
+            '<a href="' + j.directApplicationLink + '" target="_blank" rel="noopener" class="btn btn-primary" style="min-height: 36px; padding: 6px 12px; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">Apply Direct &rarr;</a>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
     }
 
     function initKpis() {
@@ -1040,6 +1207,8 @@ export function renderDashboardHtml(positions: PhDPosition[], universities: Univ
     }
 
     // Initial renders
+    initGottingenKpis();
+    applyGottingenFilters();
     initKpis();
     applyJobFilters();
     applyUniFilters();

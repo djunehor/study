@@ -1,8 +1,9 @@
 import { PhDPosition } from './types';
 import { scanFeeds } from './scanner';
-import { generateExcelCsv, generateUniversitiesCsv } from './exporter';
+import { generateExcelCsv, generateUniversitiesCsv, generateEnglishJobsCsv } from './exporter';
 import { renderDashboardHtml } from './ui';
 import { UNIVERSITIES_DATA } from './universities-data';
+import { JOBS_GOTTINGEN_DATA } from './jobs-gottingen-data';
 
 export interface Env {
   GEMINI_API_KEY?: string;
@@ -66,6 +67,31 @@ export default {
       });
     }
 
+    // Route: GET /api/export-gottingen-jobs -> Download Excel CSV file of verified English jobs
+    if (pathname === '/api/export-gottingen-jobs') {
+      const csv = generateEnglishJobsCsv(JOBS_GOTTINGEN_DATA);
+
+      return new Response(csv, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/csv; charset=utf-8',
+          'Content-Disposition': 'attachment; filename="gottingen_remote_english_jobs.csv"',
+          'Cache-Control': 'no-cache',
+        },
+      });
+    }
+
+    // Route: GET /api/gottingen-jobs -> JSON list of verified English jobs
+    if (pathname === '/api/gottingen-jobs') {
+      return new Response(JSON.stringify({ count: JOBS_GOTTINGEN_DATA.length, jobs: JOBS_GOTTINGEN_DATA }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+
     // Route: GET /api/universities -> JSON list of 44 universities
     if (pathname === '/api/universities') {
       return new Response(JSON.stringify({ count: UNIVERSITIES_DATA.length, universities: UNIVERSITIES_DATA }), {
@@ -124,7 +150,7 @@ export default {
     // Route: GET / -> Interactive HTML dashboard
     if (pathname === '/' || pathname === '/index.html') {
       const positions = await getOrUpdatePositions(false, apiKey);
-      const html = renderDashboardHtml(positions, UNIVERSITIES_DATA);
+      const html = renderDashboardHtml(positions, UNIVERSITIES_DATA, JOBS_GOTTINGEN_DATA);
 
       return new Response(html, {
         status: 200,
