@@ -4,7 +4,7 @@ import { serve } from '@hono/node-server';
 import { generateExcelCsv, generateUniversitiesCsv } from './exporter';
 import { renderDashboardHtml } from './ui';
 import { UNIVERSITIES_DATA } from './universities-data';
-import { getDatabase, closeDatabase } from './db';
+import { initDatabase, closeDatabase } from './db';
 import { getRedisClient, closeRedis } from './redis';
 import { getPositions } from './positions-service';
 
@@ -68,8 +68,8 @@ export function createApp(): Hono {
 
 const app = createApp();
 
-// Initialize dependencies
-getDatabase();
+// Initialize dependencies at startup
+initDatabase();
 getRedisClient();
 
 // Start server
