@@ -138,7 +138,7 @@ export default {
   },
 
   // Daily Cron Trigger
-  async scheduled(event: ScheduledEvent, env?: Env): Promise<void> {
+  async scheduled(event: { scheduledTime: number }, env?: Env): Promise<void> {
     console.log('Running daily scheduled PhD scanner at:', new Date(event.scheduledTime).toISOString());
     await getOrUpdatePositions(true, env?.GEMINI_API_KEY);
   },
