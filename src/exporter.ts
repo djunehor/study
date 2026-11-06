@@ -1,4 +1,4 @@
-import { PhDPosition, UniversityEntry } from './types';
+import { PhDPosition, UniversityEntry, EnglishJobEntry } from './types';
 
 /**
  * Escape a string for CSV cell insertion.
@@ -114,3 +114,34 @@ export function generateUniversitiesCsv(universities: UniversityEntry[]): string
 
   return '\uFEFF' + csvContent;
 }
+
+/**
+ * Generate an Excel-compatible CSV string from the verified Göttingen & Remote Germany English jobs list.
+ * Prefixes UTF-8 Byte Order Mark (\uFEFF).
+ */
+export function generateEnglishJobsCsv(jobs: EnglishJobEntry[]): string {
+  const headers = [
+    'Index',
+    'Job Title',
+    'Employer',
+    'Workplace Location',
+    'Category',
+    'Fit Assessment',
+    'Direct Application Link',
+  ];
+
+  const rows = jobs.map((j, idx) => [
+    escapeCsv(String(idx + 1)),
+    escapeCsv(j.jobTitle),
+    escapeCsv(j.employer),
+    escapeCsv(j.workplaceLocation),
+    escapeCsv(j.category),
+    escapeCsv(j.fitAssessment),
+    escapeCsv(j.directApplicationLink),
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
+
+  return '\uFEFF' + csvContent;
+}
+

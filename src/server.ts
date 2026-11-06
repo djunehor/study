@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
-import { generateExcelCsv, generateUniversitiesCsv } from './exporter';
+import { generateExcelCsv, generateUniversitiesCsv, generateEnglishJobsCsv } from './exporter';
 import { renderDashboardHtml } from './ui';
 import { UNIVERSITIES_DATA } from './universities-data';
-import { initDatabase, closeDatabase } from './db';
-import { getRedisClient, closeRedis } from './redis';
+import { JOBS_GOTTINGEN_DATA } from './jobs-gottingen-data';
+import { initDatabase } from './db';
 import { getPositions } from './positions-service';
 
 const PORT = Number(process.env.PORT) || 8787;
@@ -18,7 +18,7 @@ export function createApp(): Hono {
   app.get('/', async (c) => {
     const apiKey = c.req.header('x-gemini-api-key') || process.env.GEMINI_API_KEY;
     const positions = await getPositions(false, apiKey);
-    return c.html(renderDashboardHtml(positions, UNIVERSITIES_DATA));
+    return c.html(renderDashboardHtml(positions, UNIVERSITIES_DATA, JOBS_GOTTINGEN_DATA));
   });
 
   app.get('/api/jobs', async (c) => {
@@ -63,43 +63,32 @@ export function createApp(): Hono {
     });
   });
 
+  app.get('/api/gottingen-jobs', (c) => {
+    return c.json({ count: JOBS_GOTTINGEN_DATA.length, jobs: JOBS_GOTTINGEN_DATA });
+  });
+
+  app.get('/api/export-gottingen-jobs', (c) => {
+    return c.text(generateEnglishJobsCsv(JOBS_GOTTINGEN_DATA), 200, {
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="gottingen_remote_english_jobs.csv"',
+    });
+  });
+
   return app;
 }
 
 const app = createApp();
 
-// Initialize dependencies at startup
 initDatabase();
-getRedisClient();
 
-// Start server
-const server = serve({ fetch: app.fetch, port: PORT });
-
-// Graceful shutdown
-async function gracefulShutdown(signal: string): Promise<void> {
-  console.log(`Received ${signal}. Shutting down cleanly...`);
-  server.close(async () => {
-    closeDatabase();
-    await closeRedis();
-    process.exit(0);
-  });
-
-  // Force close after 5 seconds if hanging
-  setTimeout(() => {
-    process.exit(1);
-  }, 5000).unref();
-}
-
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  gracefulShutdown('uncaughtException');
-});
-
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection:', reason);
-});
+serve(
+  {
+    fetch: app.fetch,
+    port: PORT,
+  },
+  (info) => {
+    console.log(`Server listening on http://localhost:${info.port}`);
+  }
+);
 
 export default app;
