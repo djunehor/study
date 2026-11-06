@@ -1,4 +1,4 @@
-import { UniversityEntry } from "./types";
+import { UniversityEntry } from './types';
 
 export const UNIVERSITIES_DATA: UniversityEntry[] = [
   {
@@ -54,6 +54,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Full funding via CGS scholarships or faculty research associate contracts.",
     "verifiedProfessorsSummary": "Prof. Dr. Oliver Gürtler (Chair of Personnel and Labor Economics).",
     "urls": [
+      {
+        "label": "CGS Direct PhD Application Portal",
+        "url": "https://cgs.uni-koeln.de/en/economics/phd-programme/application"
+      },
       {
         "label": "CGS Official Website (English Program Rules)",
         "url": "https://cgs.uni-koeln.de/en/"
@@ -200,6 +204,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Florian Kunze (Chair of Organisational Studies / Future of Work), Prof. Dr. Nils Weidmann (Chair of International Politics and Conflict Research).",
     "urls": [
+      {
+        "label": "Konstanz GSBS How to Apply (Direct Admission)",
+        "url": "https://www.gsbs.uni-konstanz.de/application/how-to-apply/"
+      },
       {
         "label": "DAAD Official Profile for Konstanz GSBS (English Rules)",
         "url": "https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4424/"
@@ -453,6 +461,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Rodrigo Isidor (Chair of Human Resource Management & Intrapreneurship), Prof. Dr. Alexander Stroh (Chair of African Politics and Development Policy).",
     "urls": [
       {
+        "label": "BIGSAS Direct Application Portal",
+        "url": "https://www.bigsas.uni-bayreuth.de/en/application/index.html"
+      },
+      {
         "label": "BIGSAS Official English Portal",
         "url": "https://www.bigsas.uni-bayreuth.de/en/index.html"
       },
@@ -487,6 +499,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Stefan Süß (Chair of Business Administration, in particular Work, Human Resources and Organization).",
     "urls": [
+      {
+        "label": "HHU Doctoral Admission Conditions & Application",
+        "url": "https://www.wiwi.hhu.de/en/phd-/-graduate-school-1/admission-conditions/admission-conditions2-2"
+      },
       {
         "label": "HHU Faculty of Business and Economics Doctorate Portal",
         "url": "https://www.wiwi.hhu.de/en/research/promotion-an-der-wirtschaftswissenschaftlichen-fakultaet-neu"
@@ -553,6 +569,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "See faculty directory links.",
     "urls": [
       {
+        "label": "IAQ Direct Vacancies & Applications",
+        "url": "https://www.uni-due.de/iaq/stellen.php"
+      },
+      {
         "label": "IAQ English Portal",
         "url": "https://www.uni-due.de/iaq/en_index.php"
       },
@@ -587,6 +607,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Laszlo Goerke (Director of IAAEU & Chair of Personnel Economics), Prof. Dr. Katrin Muehlfeld (Chair of Management, Organization, and Human Resources).",
     "urls": [
+      {
+        "label": "IAAEU Direct Research & PhD Job Openings",
+        "url": "https://iaaeu.de/en/jobs-en"
+      },
       {
         "label": "IAAEU Staff and Research Overview",
         "url": "https://iaaeu.de/index.php?option=com_content&view=article&id=25:mitarbeiter-allgemein-englisch&catid=2&Itemid=115&lang=en"
@@ -625,6 +649,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "See faculty directory links.",
     "urls": [
+      {
+        "label": "Hamburg WiSo International Doctoral Application",
+        "url": "https://www.uni-hamburg.de/en/campuscenter/bewerbung/international.html"
+      },
       {
         "label": "WiSo Graduate School — Doing a Doctorate",
         "url": "https://www.wiso.uni-hamburg.de/en/einrichtungen-service/einrichtungen/graduate-school/doing-a-doctorate.html"
@@ -794,6 +822,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Fabian Jintae Froese (Chair of Human Resource Management and Asian Business), Prof. Dr. Nicole Mayer-Ahuja (Chair of Sociology of Work, Enterprise and Economy).",
     "urls": [
       {
+        "label": "Göttingen GGG Direct Admission & Application Process",
+        "url": "https://www.uni-goettingen.de/en/609059.html"
+      },
+      {
         "label": "Göttingen Graduate School of Social Sciences (GGG) Portal",
         "url": "https://www.uni-goettingen.de/en/29938.html"
       },
@@ -827,6 +859,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Gerhard Schewe (Chair of Business Administration, Organization, Personnel and Innovation), Prof. Dr. Oliver Treib (Comparative Policy Research & European Integration).",
     "urls": [
+      {
+        "label": "Münster GraSP Direct Application (Bewerbung)",
+        "url": "https://www.uni-muenster.de/IfPol/GraSP/en/bewerbung/index.html"
+      },
       {
         "label": "GraSP Official English Portal",
         "url": "https://www.uni-muenster.de/IfPol/GraSP/en/index.shtml"
@@ -933,6 +969,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Sandra Destradi (Chair of International Relations).",
     "urls": [
       {
+        "label": "Freiburg Enrolment for Doctoral Candidates",
+        "url": "https://uni-freiburg.de/en/studies/getting-started/enrolment/enrolment-doctoral-candidates"
+      },
+      {
         "label": "University of Freiburg Doctoral Studies (GRACE)",
         "url": "https://uni-freiburg.de/frs-en/grace/doctoral-studies-ufr/"
       },
@@ -1030,6 +1070,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Georg Wenzelburger (Chair of Comparative European Politics).",
     "urls": [
       {
+        "label": "Saarland University Direct Application Portal",
+        "url": "https://www.uni-saarland.de/en/study/application.html"
+      },
+      {
         "label": "Saarland University International PhD Portal",
         "url": "https://www.uni-saarland.de/en/studies/international/other-study-programmes/phd.html"
       },
@@ -1125,6 +1169,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Regina Kreide (Chair of Political and Social Theory / International Political Theory).",
     "urls": [
+      {
+        "label": "Giessen Direct Study & Doctoral Application",
+        "url": "https://www.uni-giessen.de/de/studium/bewerbung"
+      },
       {
         "label": "Giessen Graduate Centre (GGS) Official Portal",
         "url": "https://www.uni-giessen.de/en/faculties/f02/research/phd-1/giessen-graduate-centre"
@@ -1273,6 +1321,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Thomas Steger (Chair of Leadership and Organization).",
     "urls": [
       {
+        "label": "Regensburg International Doctoral Application",
+        "url": "https://www.uni-regensburg.de/en/international/coming-to-regensburg/pursuing-a-degree-program/application"
+      },
+      {
         "label": "University of Regensburg PhD Studies Welcome Center",
         "url": "https://www.uni-regensburg.de/en/international/welcome-center/information-about-phd-studies/interested-in-phd-studies"
       },
@@ -1303,6 +1355,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "verifiedProfessorsSummary": "Prof. Dr. Erik E. Lehmann (Chair of Management and Organization).",
     "urls": [
       {
+        "label": "Augsburg Direct Doctoral Application Portal",
+        "url": "https://www.uni-augsburg.de/en/studium/bewerbung/"
+      },
+      {
         "label": "University of Augsburg Doctoral Studies Portal",
         "url": "https://www.uni-augsburg.de/en/studium/studienangebot/promotion/"
       },
@@ -1332,6 +1388,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Christian Martin (Chair of Political Science / International Relations at CAU), Prof. Dr. Holger Görg (International Trade and Labor Markets at IfW Kiel).",
     "urls": [
+      {
+        "label": "Kiel IfW Advanced Studies How to Apply",
+        "url": "https://www.kielinstitut.de/institute/advanced-studies-program/how-to-apply/"
+      },
       {
         "label": "Kiel Institute (IfW) PhD Program Structure",
         "url": "https://www.kielinstitut.de/institute/advanced-studies-program/structure-of-our-phd-program/"
@@ -1366,6 +1426,10 @@ export const UNIVERSITIES_DATA: UniversityEntry[] = [
     "funding": "Paid TV-L E13 employment or scholarship.",
     "verifiedProfessorsSummary": "Prof. Dr. Birgit Renzl (Chair of Organization).",
     "urls": [
+      {
+        "label": "Stuttgart Doctoral Degree Enrollment & Application",
+        "url": "https://www.uni-stuttgart.de/en/research/early-career-researchers/doctoral-degree-studies/enrollment/"
+      },
       {
         "label": "University of Stuttgart Doctoral Degree Studies",
         "url": "https://www.uni-stuttgart.de/en/research/early-career-researchers/doctoral-degree-studies/"

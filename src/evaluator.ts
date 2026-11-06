@@ -323,7 +323,13 @@ export async function evaluateCandidatesWithGemini(
  */
 export function buildStructuredProgramPositions(universities: UniversityEntry[]): PhDPosition[] {
   return universities.map((u) => {
-    const primaryUrl = u.urls[0]?.url || 'https://www2.daad.de';
+    // Select the best direct application/admission URL over general homepages
+    const appKeywords = ['application', 'apply', 'admission', 'guidelines', 'requirements', 'cfa', 'dossier', 'enrolling'];
+    const bestUrlEntry =
+      u.urls.find((item) => appKeywords.some((k) => item.label.toLowerCase().includes(k) || item.url.toLowerCase().includes(k))) ||
+      u.urls[0];
+
+    const primaryUrl = bestUrlEntry?.url || u.urls[0]?.url || 'https://www2.daad.de';
     const profLinks = u.urls
       .slice(1)
       .map((l) => l.label)
