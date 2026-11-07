@@ -405,5 +405,14 @@ export const JOBS_GOTTINGEN_DATA: EnglishJobEntry[] = [
     "category": "Sales, Marketing & Content",
     "fitAssessment": "This role aligns with the candidate's customer-facing experience and sales domain interest. Only native-level English is required; German is not mandatory.",
     "directApplicationLink": "https://www.xing.com/jobs/berlin-account-executive-ae-enterprise-sales-international-158824214"
+  },
+  {
+    "jobId": "join-16911400-customer-success-manager-europe-remote",
+    "jobTitle": "Customer Success Manager (Europe) (Remote)",
+    "employer": "Weflow",
+    "workplaceLocation": "Remote (Germany)",
+    "category": "Customer Service & Client Operations",
+    "fitAssessment": "This role aligns with the candidate's experience in customer-facing and client success roles. The job description does not require German language proficiency.",
+    "directApplicationLink": "https://join.com/companies/getweflowcom/16911400-customer-success-manager-europe-remote"
   }
 ];
